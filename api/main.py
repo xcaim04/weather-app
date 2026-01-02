@@ -10,15 +10,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Allow frontend dev server to access this API
 default_origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "https://weather-app-lac-six-82.vercel.app"
 ]
 
-# Allow overriding/adding origins via env var FRONTEND_ORIGINS (comma-separated)
 env_origins = os.environ.get("FRONTEND_ORIGINS")
 if env_origins:
     extra = [o.strip() for o in env_origins.split(",") if o.strip()]
@@ -36,10 +35,8 @@ app.add_middleware(
 
 app.include_router(weather_router, prefix="/weather", tags=["weather"])
 
-@app.get('/')
+@app.get("/")
 def root():
-    return {
-        'message': 'welcome to Weather API'
-    }
+    return {"message": "welcome to Weather API"}
 
 app.add_exception_handler(APIExceptionError, api_exception_handler)
